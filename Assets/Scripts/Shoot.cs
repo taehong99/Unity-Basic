@@ -21,9 +21,9 @@ public class Shoot : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             origin = GameObject.Find("BulletOrigin").transform.position;
-            direction = transform.forward;
+            direction = transform.GetChild(3).forward;
 
-            GameObject bullet = Instantiate(bulletPrefab, origin, transform.rotation);
+            GameObject bullet = Instantiate(bulletPrefab, origin, transform.GetChild(3).rotation);
             bullet.GetComponent<Rigidbody>().velocity = (direction * bulletSpeed);
         }
     }
