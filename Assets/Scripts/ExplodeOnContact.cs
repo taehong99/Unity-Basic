@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class ExplodeOnContact : MonoBehaviour
 {
-    ParticleSystem explosion;
-    private void Start()
-    {
-        explosion = transform.GetChild(0).GetComponent<ParticleSystem>();
-        explosion.Stop();
-    }
+    public ParticleSystem explosionPrefab;
+
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collided with " +  collision.gameObject.name);
-        explosion.Play();
-        //Destroy(gameObject);
+        var explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }
