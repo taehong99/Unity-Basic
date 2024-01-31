@@ -8,8 +8,11 @@ public class ExplodeOnContact : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collided with " +  collision.gameObject.name);
-        var explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
     }
 }
