@@ -9,14 +9,13 @@ public class TankMovement : MonoBehaviour
     Vector3 moveDirection;
     Transform turret;
     Rigidbody rb;
-    // Start is called before the first frame update
+
     void Start()
     {
         turret = transform.GetChild(3);
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Base Movement
