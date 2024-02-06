@@ -1,20 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Pool;
+
 
 public class Shoot : MonoBehaviour
 {
-    public float bulletSpeed;
+    // Events
+    public static event Action OnBulletShoot;
+
+    public float bulletForceMultiplier;
+    public float baseBulletForce;
+    public float maxChargeTime;
     public GameObject bulletPrefab;
     public ObjectPool<GameObject> pool;
+    public Transform spawnPoint;
+    public Transform turret;
+    public AudioSource shotChargingAudio;
+    public AudioSource shotFiringAudio;
 
-    Vector3 origin;
     Vector3 direction;
     Quaternion bulletRotation;
-    // Start is called before the first frame update
+    TrajectoryPredictor trajectoryPredictor;
+    ProjectileProperties projectileData;
+
+    Coroutine chargeCoroutine;
+    float chargeTime;
+
     void Start()
     {
+        // Bullet Trajectory Setup
+        projectileData = new ProjectileProperties();
+        Rigidbody r = bulletPrefab.GetComponent<Rigidbody>();
+        trajectoryPredictor = GetComponent<TrajectoryPredictor>();
+        projectileData.mass = r.mass;
+        projectileData.drag = r.drag;
+        projectileData.initialSpeed = baseBulletForce;
+
+        // Bullet Object Pooling
         pool = new ObjectPool<GameObject>(
             createFunc: () => Instantiate(bulletPrefab), 
             actionOnGet: (obj) => obj.SetActive(true), 
@@ -25,19 +51,65 @@ public class Shoot : MonoBehaviour
             maxSize: 50);
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject bullet = pool.Get();
-            origin = GameObject.Find("BulletOrigin").transform.position;
-            direction = transform.GetChild(3).forward;
-            bulletRotation = transform.GetChild(3).rotation;
+        // Only show trajectory in TPS Mode
+        /*if(viewMode == ViewMode.FPS) {
+            return; 
+        }*/
 
-            bullet.transform.position = origin;
-            bullet.transform.rotation = bulletRotation;
-            bullet.GetComponent<Rigidbody>().velocity = (direction * bulletSpeed);
+        projectileData.direction = spawnPoint.forward;
+        projectileData.initialPosition = spawnPoint.position;
+        Predict();
+    }
+        
+    
+    void Predict()
+    {
+        trajectoryPredictor.PredictTrajectory(projectileData);
+    }
+
+
+    void OnShoot(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            shotChargingAudio.Play();
+            chargeTime = 0;
+            chargeCoroutine = StartCoroutine(ChargeBullet());
         }
+        else
+        {
+            StopCoroutine(chargeCoroutine);
+            shotChargingAudio.Stop();
+            shotFiringAudio.Play();
+            OnBulletShoot?.Invoke();
+            Fire();
+            projectileData.initialSpeed = baseBulletForce;
+        }
+    }
+
+    IEnumerator ChargeBullet()
+    {
+        while (true)
+        {
+            chargeTime += Time.deltaTime;
+            chargeTime = Mathf.Min(maxChargeTime, chargeTime);
+
+            // Update Trajectory
+            projectileData.initialSpeed = baseBulletForce + (chargeTime * bulletForceMultiplier);
+
+            yield return null;
+        }
+    }
+
+    void Fire()
+    {
+        GameObject bullet = pool.Get();
+        bulletRotation = spawnPoint.rotation;
+
+        bullet.transform.position = spawnPoint.position;
+        bullet.transform.rotation = bulletRotation;
+        bullet.GetComponent<Bullet>().force = baseBulletForce + (chargeTime * bulletForceMultiplier);
     }
 }

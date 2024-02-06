@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum Mode { Delay, Triple, Hold }
+
 public class Mover : MonoBehaviour
 {
+    public enum Mode { Delay, Triple, Hold }
+
     public float movementSpeed = 5f;
     public float jumpSpeed = 5f;
     public float jumpCooldown = 2;
