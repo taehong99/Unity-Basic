@@ -27,11 +27,14 @@ public class Shoot : MonoBehaviour
     TrajectoryPredictor trajectoryPredictor;
     ProjectileProperties projectileData;
 
+    Animator tankAnimator;
     Coroutine chargeCoroutine;
     float chargeTime;
 
     void Start()
     {
+        tankAnimator = GetComponent<Animator>();
+
         // Bullet Trajectory Setup
         projectileData = new ProjectileProperties();
         Rigidbody r = bulletPrefab.GetComponent<Rigidbody>();
@@ -84,6 +87,7 @@ public class Shoot : MonoBehaviour
             shotChargingAudio.Stop();
             shotFiringAudio.Play();
             OnBulletShoot?.Invoke();
+            tankAnimator.SetTrigger("Shoot");
             Fire();
             projectileData.initialSpeed = baseBulletForce;
         }
@@ -103,7 +107,7 @@ public class Shoot : MonoBehaviour
         }
     }
 
-    void Fire()
+    public void Fire()
     {
         GameObject bullet = pool.Get();
         bulletRotation = spawnPoint.rotation;

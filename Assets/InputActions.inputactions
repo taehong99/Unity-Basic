@@ -99,6 +99,17 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "",
+                    "id": "68f73d1b-8a2a-414d-8e4d-fa551c236eb0",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "e152c4d4-3fe5-4730-be45-74ec57777de0",
                     "path": "2DVector",
@@ -155,19 +166,19 @@
                 },
                 {
                     "name": "",
-                    "id": "335acf9c-5ee0-4426-a146-43b2ac82640a",
-                    "path": "<Keyboard>/space",
+                    "id": "1a04ea29-745f-4755-80e8-879e9be54444",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Shoot",
+                    "action": "RotateTurret",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "6175ed85-2558-4ea1-8d53-93d8c82fbb9c",
-                    "path": "<Mouse>/leftButton",
+                    "id": "335acf9c-5ee0-4426-a146-43b2ac82640a",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

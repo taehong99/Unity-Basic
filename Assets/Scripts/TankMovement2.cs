@@ -16,6 +16,7 @@ public class TankMovement2 : MonoBehaviour
     Vector2 rotateDir;
 
     [Header("Turret")]
+    public Transform turret;
     public float turretXSensitivity = 50f;
     public float turretYSensitivity = 50f;
     public float minX;
@@ -24,7 +25,6 @@ public class TankMovement2 : MonoBehaviour
     public float maxY;
     float rotationX;
     float rotationY;
-    Transform turret;
 
     [Header("Audio")]
     public AudioSource tankIdleAudio;
@@ -32,7 +32,6 @@ public class TankMovement2 : MonoBehaviour
 
     void Start()
     {
-        turret = transform.GetChild(3);
         tankIdleAudio.Play();
     }
 
@@ -93,6 +92,7 @@ public class TankMovement2 : MonoBehaviour
     void OnMove(InputValue value)
     {
         moveDir = value.Get<Vector2>();
+        Debug.Log(moveDir);
 
         // Handle reverse rotation when moving back
         if (moveDir.y < 0)

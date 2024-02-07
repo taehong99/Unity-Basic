@@ -13,7 +13,7 @@ public class CameraManager : MonoBehaviour
 
     void Start()
     {
-        Cursor.visible = false;
+        //Cursor.visible = false;
         TPSCamera.SetActive(true);
         FPSCamera.SetActive(false);
     }
