@@ -3,15 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 
 
 public class Shoot : MonoBehaviour
 {
-    // Events
-    public static event Action OnBulletShoot;
-
     public float bulletForceMultiplier;
     public float baseBulletForce;
     public float maxChargeTime;
@@ -86,7 +84,6 @@ public class Shoot : MonoBehaviour
             StopCoroutine(chargeCoroutine);
             shotChargingAudio.Stop();
             shotFiringAudio.Play();
-            OnBulletShoot?.Invoke();
             tankAnimator.SetTrigger("Shoot");
             Fire();
             projectileData.initialSpeed = baseBulletForce;
@@ -109,6 +106,8 @@ public class Shoot : MonoBehaviour
 
     public void Fire()
     {
+        Manager.Data.FireCount++;
+
         GameObject bullet = pool.Get();
         bulletRotation = spawnPoint.rotation;
 
